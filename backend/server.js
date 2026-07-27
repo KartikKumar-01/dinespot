@@ -4,11 +4,15 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRouter from "./routes/authRoutes.js";
+import restaurantRouter from "./routes/restaurantRoutes.js";
+import bookingRouter from "./routes/bookingRoutes.js";
+import connectDB from "./config/db.js";
 
 configDotenv();
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
+connectDB()
 app.use(
   cors({
     origin: true,
@@ -25,7 +29,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-
+app.use("/api/restaurant", restaurantRouter);
+app.use("/api/bookings", bookingRouter);
 app.use((err, req, res, next) => {
   console.error("Unhandle error", err);
   res.status(500).json({
