@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --color-gold: #C9A96E;
+  --color-gold-light: #D4B483;
+  --color-gold-dark: #A8854A;
+  --color-cream: #FAFAF8;
+  --color-charcoal: #1A1A1A;
+  --color-muted: #6B6B6B;
+  --color-border: #E8E4DC;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #C9A96E;
+  border-radius: 3px;
+}
+
+/* Smooth transitions */
+a, button {
+  transition: all 0.2s ease;
+}
+
+/* Skeleton animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0ede8 25%, #e8e4dc 50%, #f0ede8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
