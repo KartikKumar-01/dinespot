@@ -29,7 +29,7 @@ bookingSchema.pre("save", function () {
     this.bookingId = `GR-${crypto
       .randomBytes(4)
       .toString("hex")
-      .toUppercase()}`;
+      .toUpperCase()}`;
   }
 });
 

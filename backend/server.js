@@ -18,7 +18,7 @@ console.log("PORT from env:", process.env.PORT);
 connectDB();
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: ["http://localhost:5174", "http://localhost:5173"],
     credentialsx: true,
   })
 );

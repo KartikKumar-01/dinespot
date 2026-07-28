@@ -74,12 +74,9 @@ export const createBooking = async (req, res) => {
 
 export const getMyBookings = async (req, res) => {
   try {
-    const bookings = (
-      await Booking.find({ user: res.user._id }).populate(
-        "restaurant",
-        "name location image address slug"
-      )
-    ).sort({ date: -1, time: -1 });
+    const bookings = await Booking.find({ user: req.user._id })
+      .populate("restaurant", "name location image address slug")
+      .sort({ date: -1, time: -1 });
 
     return res.status(200).json(bookings);
   } catch (error) {
