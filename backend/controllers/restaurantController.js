@@ -9,10 +9,15 @@ export const getRestaurants = async (req, res) => {
 
     const queryObj = { status: "approved" };
     if (search) {
+      let q = search.toLowerCase();
+      console.log(q);
       queryObj.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { tags: { $regex: search, $options: "i" } },
-        { location: { $regex: search, $options: "i" } },
+        { name: { $regex: q, $options: "i" } },
+        { cuisine: { $regex: q, $options: "i" } },
+        { description: { $regex: q, $options: "i" } },
+        { location: { $regex: q, $options: "i" } },
+        { tags: { $regex: q, $options: "i" } },
+        { chef: { $regex: q, $options: "i" } },
       ];
     }
     if (priceRange) {

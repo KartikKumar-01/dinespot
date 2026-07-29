@@ -1,5 +1,6 @@
 import { Booking } from "../models/Booking.js";
 import { Restaurant } from "../models/Restaurant.js";
+import { sendMail } from "../services/mail.js";
 
 export const createBooking = async (req, res) => {
   try {
@@ -12,7 +13,7 @@ export const createBooking = async (req, res) => {
         .json({ message: "Please provide the required reservation details." });
     }
 
-    const restaurant = await Restaurant.findById(restaurantId);
+    const restaurant = await Restaurant.findById(restaurantId).populate("owner", "email");
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found." });
     }
@@ -65,6 +66,53 @@ export const createBooking = async (req, res) => {
       "name location image address"
     );
 
+    console.log("Restaurant owner:", restaurant.owner);
+console.log("Owner email:", restaurant.owner?.email);
+
+    await sendMail({
+    to: restaurant.owner.email,
+    subject: "New Booking",
+    html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+  
+  <h2 style="color: #2563eb;">🍽️ New Booking Received</h2>
+
+  <p>Hello,</p>
+
+  <p>You have received a new table reservation.</p>
+
+  <table style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td><strong>Customer:</strong></td>
+      <td>${req.user.name}</td>
+    </tr>
+    <tr>
+      <td><strong>Date:</strong></td>
+      <td>${booking.date}</td>
+    </tr>
+    <tr>
+      <td><strong>Time:</strong></td>
+      <td>${booking.time}</td>
+    </tr>
+    <tr>
+      <td><strong>Guests:</strong></td>
+      <td>${booking.guests}</td>
+    </tr>
+  </table>
+
+  <p style="margin-top: 20px;">
+    Please log in to your dashboard for more details.
+  </p>
+
+  <hr>
+
+  <p style="font-size: 12px; color: #6b7280;">
+    DineSpot
+  </p>
+
+</div>
+    `,
+});
     return res.status(201).json(populatedBooking);
   } catch (error) {
     console.error(error);
@@ -104,10 +152,57 @@ export const cancelBooking = async (req, res) => {
     booking.status = "cancelled";
     await booking.save();
 
-    const populatedBooking = await booking.populate(
-      "restaurant",
-      "name location image address"
-    );
+    const populatedBooking = await booking.populate({
+      path: "restaurant",
+      select: "name location image address owner",
+      populate: {
+        path: "owner",
+        select: "email"
+      }
+    })
+
+    await sendMail({
+    to: populatedBooking.restaurant.owner.email,
+    subject: "Booking Cancelled",
+    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+
+  <h2 style="color: #dc2626;">❌ Booking Cancelled</h2>
+
+  <p>Hello,</p>
+
+  <p>A customer has cancelled their table reservation.</p>
+
+  <table style="width:100%;">
+    <tr>
+      <td><strong>Customer:</strong></td>
+      <td>${req.user.name}</td>
+    </tr>
+    <tr>
+      <td><strong>Date:</strong></td>
+      <td>${booking.date}</td>
+    </tr>
+    <tr>
+      <td><strong>Time:</strong></td>
+      <td>${booking.time}</td>
+    </tr>
+    <tr>
+      <td><strong>Guests:</strong></td>
+      <td>${booking.guests}</td>
+    </tr>
+  </table>
+
+  <p style="margin-top:20px;">
+    The reserved table is now available for new bookings.
+  </p>
+
+  <hr>
+
+  <p style="font-size:12px;color:#6b7280;">
+    DineSpot
+  </p>
+
+</div>`
+});
 
     return res.status(200).json(populatedBooking);
   } catch (error) {

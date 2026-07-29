@@ -1,4 +1,5 @@
-import { configDotenv } from "dotenv";
+import "dotenv/config";
+import cloudinary from "./config/cloudinary.js";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -10,7 +11,6 @@ import connectDB from "./config/db.js";
 import ownerRouter from "./routes/ownerRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
 
-configDotenv();
 const app = express();
 const port = process.env.PORT || 3000;
 console.log("PORT from env:", process.env.PORT);
@@ -18,7 +18,7 @@ console.log("PORT from env:", process.env.PORT);
 connectDB();
 app.use(
   cors({
-    origin: ["http://localhost:5174", "http://localhost:5173"],
+    origin: process.env.CLIENT_URL,
     credentialsx: true,
   })
 );
@@ -35,7 +35,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/restaurant", restaurantRouter);
 app.use("/api/bookings", bookingRouter);
 app.use("/api/owner", ownerRouter);
-app.use('/api/admin', adminRouter)
+app.use("/api/admin", adminRouter);
 
 app.use((err, req, res, next) => {
   console.error("Unhandle error", err);

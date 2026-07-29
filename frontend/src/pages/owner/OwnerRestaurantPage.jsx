@@ -180,7 +180,7 @@ export default function OwnerRestaurantPage() {
 
       {/* Create / Edit Sheet */}
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
+        <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto p-5">
           <SheetHeader className="mb-6">
             <SheetTitle className="font-serif text-2xl">
               {isEditing ? 'Edit Restaurant' : 'Register Restaurant'}

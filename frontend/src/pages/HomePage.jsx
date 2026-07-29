@@ -53,9 +53,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ── HERO ── */}
       <section className="relative h-screen min-h-[600px] flex flex-col">
-        {/* Background */}
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={HERO_IMG}
@@ -66,7 +64,6 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         </div>
 
-        {/* Hero content */}
         <div className="relative flex-1 flex flex-col items-center justify-center text-center px-4 pt-16">
           <p className="text-[#C9A96E] text-xs font-bold tracking-[0.3em] uppercase mb-5">
             Exquisite Dining Experiences
@@ -78,7 +75,6 @@ export default function HomePage() {
             Discover handpicked restaurants offering unforgettable culinary journeys.
           </p>
 
-          {/* Auth buttons if not logged in */}
           {!isAuthenticated && (
             <div className="flex gap-3 mb-10">
               <Link
@@ -101,10 +97,9 @@ export default function HomePage() {
             </p>
           )}
 
-          {/* Search bar */}
           <form
             onSubmit={handleSearch}
-            className="w-full max-w-3xl glass rounded-2xl shadow-2xl p-3"
+            className="w-full max-w-4xl glass rounded-2xl shadow-2xl p-3"
           >
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 flex items-center gap-3 bg-white rounded-xl px-4 py-3">

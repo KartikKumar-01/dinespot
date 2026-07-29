@@ -1,12 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 
-/**
- * RoleRoute — guards routes by user role.
- * Shows spinner while auth is loading (e.g. on page refresh),
- * then redirects to /login if not authenticated,
- * or to / if authenticated but wrong role.
- */
+
 export default function RoleRoute({ children, role }) {
   const { isAuthenticated, loading, user } = useAuthStore();
 

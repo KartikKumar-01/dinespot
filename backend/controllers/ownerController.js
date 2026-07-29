@@ -1,15 +1,18 @@
+import cloudinary from "../config/cloudinary.js";
 import { Booking } from "../models/Booking.js";
 import { Restaurant } from "../models/Restaurant.js";
-import { v2 as cloudinary } from "cloudinary";
 
 const uploadToCloudinary = (fileBuffer) => {
   return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error("Cloudinary upload timed out after 15s"));
+    }, 15000);
+
     const stream = cloudinary.uploader.upload_stream(
       { folder: "DineSpot" },
       (err, res) => {
-        if (err) {
-          return reject(err);
-        }
+        clearTimeout(timeout);
+        if (err) return reject(err);
         if (!res) return reject(new Error("Upload failed."));
         resolve({ secure_url: res.secure_url });
       }
@@ -79,8 +82,16 @@ export const createOwnerRestaurant = async (req, res) => {
     let imgUrl = "";
     if (req.file) {
       // handle img upload
-      const result = uploadToCloudinary(req.file.buffer);
-      imgUrl = result.secure_url;
+      try {
+        const result = await uploadToCloudinary(req.file.buffer);
+        imgUrl = result.secure_url;
+      } catch (error) {
+        console.error("Cloudinary Error:", error);
+        console.error("Message:", error.message);
+        console.error("HTTP Code:", error.http_code);
+        console.error("Error Details:", error.error);
+        return res.status(400).json({ message: error.message });
+      }
     }
 
     const parsedTags =
@@ -94,7 +105,7 @@ export const createOwnerRestaurant = async (req, res) => {
       name,
       slug,
       description,
-      cuisine,
+      cuisine: cuisine.toLowerCase(),
       priceRange,
       location,
       address,
@@ -136,7 +147,13 @@ export const updateOwnerRestaurant = async (req, res) => {
       image,
     } = req.body;
 
-    if (name) restaurant.name = name;
+    if (name) {
+      restaurant.name = name;
+      restaurant.slug = name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
     if (description) restaurant.description = description;
     if (cuisine) restaurant.cuisine = cuisine;
     if (location) restaurant.location = location;
@@ -158,7 +175,7 @@ export const updateOwnerRestaurant = async (req, res) => {
 
     if (req.file) {
       // handle img upload
-      const result = uploadToCloudinary(req.file.buffer);
+      const result = await uploadToCloudinary(req.file.buffer);
       restaurant.image = result.secure_url;
     }
 
@@ -199,20 +216,23 @@ export const updateBookingStatus = async (req, res) => {
         .json({ message: "Please enter valid booking status" });
     }
 
-    const booking = await Booking.findById(req.param.id);
+    const booking = await Booking.findById(req.params.id);
     if (!booking) {
       return res.status(400).json({ message: "Booking not found" });
     }
 
     const restaurant = await Restaurant.findById(booking.restaurant);
-    if (!restaurant || restaurant.owner.toString() != req.user._id.toString()) {
+    if (
+      !restaurant ||
+      restaurant.owner.toString() !== req.user._id.toString()
+    ) {
       return res
         .status(401)
         .json({ message: "Not authorized to manage this booking." });
     }
 
     booking.status = status;
-    booking.save();
+    await booking.save();
     return res.status(200).json(booking);
   } catch (error) {
     console.error(error);

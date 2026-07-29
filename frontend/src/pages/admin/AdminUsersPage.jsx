@@ -170,7 +170,7 @@ export default function AdminUsersPage() {
 
       {/* Create user sheet */}
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto px-3 py-2">
           <SheetHeader className="mb-6">
             <SheetTitle className="font-serif text-2xl">Create New Account</SheetTitle>
             <SheetDescription className="text-sm text-gray-500">
@@ -235,7 +235,7 @@ function CreateUserForm({ defaultRole, onSuccess, onError }) {
           </SelectTrigger>
           <SelectContent>
             {ROLE_OPTIONS.map(({ value, label, icon: Icon }) => (
-              <SelectItem key={value} value={value}>
+              <SelectItem key={value} value={value} className={'p-2'}>
                 <div className="flex items-center gap-2">
                   <Icon size={14} /> {label}
                 </div>

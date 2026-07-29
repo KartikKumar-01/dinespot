@@ -10,6 +10,9 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
 
+  const admin = (isAuthenticated && user.role === "admin");
+  const owner = (isAuthenticated &&  user.role === "owner")
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
@@ -23,19 +26,17 @@ export default function Navbar() {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `text-sm font-medium transition-colors ${
-      isActive
-        ? 'text-[#C9A96E]'
-        : scrolled
+    `text-sm font-medium transition-colors ${isActive
+      ? 'text-[#C9A96E]'
+      : scrolled
         ? 'text-gray-700 hover:text-[#C9A96E]'
         : 'text-white/90 hover:text-white'
     }`;
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white shadow-md border-b border-gray-100' : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md border-b border-gray-100' : 'bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-18">
@@ -45,9 +46,8 @@ export default function Navbar() {
               <UtensilsCrossed size={16} className="text-white" />
             </div>
             <span
-              className={`font-serif text-xl font-semibold transition-colors ${
-                scrolled ? 'text-gray-900' : 'text-white'
-              }`}
+              className={`font-serif text-xl font-semibold transition-colors ${scrolled ? 'text-gray-900' : 'text-white'
+                }`}
             >
               DineSpot
             </span>
@@ -58,20 +58,26 @@ export default function Navbar() {
             <NavLink to="/restaurants" className={navLinkClass}>Restaurants</NavLink>
             <a
               href="#about"
-              className={`text-sm font-medium transition-colors ${
-                scrolled ? 'text-gray-700 hover:text-[#C9A96E]' : 'text-white/90 hover:text-white'
-              }`}
+              className={`text-sm font-medium transition-colors ${scrolled ? 'text-gray-700 hover:text-[#C9A96E]' : 'text-white/90 hover:text-white'
+                }`}
             >
               About
             </a>
             <a
               href="#contact"
-              className={`text-sm font-medium transition-colors ${
-                scrolled ? 'text-gray-700 hover:text-[#C9A96E]' : 'text-white/90 hover:text-white'
-              }`}
+              className={`text-sm font-medium transition-colors ${scrolled ? 'text-gray-700 hover:text-[#C9A96E]' : 'text-white/90 hover:text-white'
+                }`}
             >
               Contact
             </a>
+            {(owner || admin) && (
+              <NavLink
+                to={admin ? "/admin" : "/owner"}
+                className={navLinkClass}
+              >
+                {admin ? "Admin" : "Owner"} Dashboard
+              </NavLink>
+            )}
           </nav>
 
           {/* Desktop Auth */}
@@ -81,11 +87,10 @@ export default function Navbar() {
                 <button
                   id="profile-menu-btn"
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    scrolled
-                      ? 'text-gray-700 hover:bg-gray-100 border border-gray-200'
-                      : 'text-white hover:bg-white/10 border border-white/30'
-                  }`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${scrolled
+                    ? 'text-gray-700 hover:bg-gray-100 border border-gray-200'
+                    : 'text-white hover:bg-white/10 border border-white/30'
+                    }`}
                 >
                   <div className="w-6 h-6 rounded-full bg-[#C9A96E] flex items-center justify-center">
                     <span className="text-white text-xs font-bold">{user?.name?.[0]?.toUpperCase()}</span>
@@ -124,11 +129,10 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className={`text-sm font-medium px-4 py-2 rounded-full transition-all ${
-                    scrolled
-                      ? 'text-gray-700 hover:text-[#C9A96E]'
-                      : 'text-white hover:text-white/80'
-                  }`}
+                  className={`text-sm font-medium px-4 py-2 rounded-full transition-all ${scrolled
+                    ? 'text-gray-700 hover:text-[#C9A96E]'
+                    : 'text-white hover:text-white/80'
+                    }`}
                 >
                   Sign In
                 </Link>

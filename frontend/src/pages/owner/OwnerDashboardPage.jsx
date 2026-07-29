@@ -82,7 +82,7 @@ export default function OwnerDashboardPage() {
             {restaurant.status}
           </Badge>
           <Button asChild variant="outline" size="sm" className="shrink-0">
-            <Link to="/owner/restaurant">
+            <Link to="/owner/restaurant" className='flex items-center'>
               Manage <ChevronRight size={14} className="ml-1" />
             </Link>
           </Button>
@@ -113,7 +113,7 @@ export default function OwnerDashboardPage() {
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <CardTitle className="font-serif text-xl text-gray-900">Recent Bookings</CardTitle>
           <Button asChild variant="ghost" size="sm" className="text-[#C9A96E] hover:text-[#A8854A] text-xs">
-            <Link to="/owner/bookings">View all <ChevronRight size={12} className="ml-1" /></Link>
+            <Link to="/owner/bookings" className='flex items-center'>View all <ChevronRight size={12} className="ml-1" /></Link>
           </Button>
         </CardHeader>
         <CardContent className="p-0">

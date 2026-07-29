@@ -22,11 +22,9 @@ import AdminUsersPage from '../pages/admin/AdminUsersPage';
 export default function AppRouter() {
   return (
     <Routes>
-      {/* Auth pages (no layout) */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* Main layout — customer-facing */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/restaurants" element={<RestaurantsPage />} />
